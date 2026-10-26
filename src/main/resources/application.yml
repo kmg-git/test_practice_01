@@ -16,7 +16,7 @@ management:
 
 info:
   app:
-    name: stability-lab
+    name: demo
     version: 0.0.1
     owner: backend-team
 

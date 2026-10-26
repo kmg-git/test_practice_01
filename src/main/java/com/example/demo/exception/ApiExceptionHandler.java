@@ -47,7 +47,7 @@ public class ApiExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnexpected(Exception e) {
 
-        log.error("우리가 예상하지 못한 예외가 발생했습니다.");
+        log.error("우리가 예상하지 못한 예외가 발생했습니다.", e);
         // error 에 필터를 걸고 데이터가 들어오면 slack 이나 discord 지금 너가 관리하고 있는 모니터링 대시보드에 error라는 레벨의 로그가 찍혔어
 
         // 고객이 주문 안되요! 라고 민원이 들어와요!

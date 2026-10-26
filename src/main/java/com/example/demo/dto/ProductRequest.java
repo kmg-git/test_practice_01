@@ -1,12 +1,9 @@
 package com.example.demo.dto;
 
 import com.example.demo.domain.BannedWord;
-import com.example.demo.domain.OnCreate;
-import com.example.demo.domain.OnUpdate;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,9 +15,9 @@ public class ProductRequest {
     @BannedWord
     @NotBlank(message = "상품명은 필수입니다.")
     private String name;
-    @NotNull
+    @Positive(message = "가격은 0보다 커야 합니다")
     private int price;
-    @Min(1)
+    @PositiveOrZero(message = "재고는 0 이상이어야 합니다")
     private int stock;
 
 
