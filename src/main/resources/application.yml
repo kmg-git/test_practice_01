@@ -1,0 +1,28 @@
+spring:
+  profiles:
+    active: local
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics     # 이 세 개만 엽니다
+  endpoint:
+    health:
+      show-details: always                 # 항목별 결과까지 보여줍니다
+  info:
+    env:
+      enabled: true                        # 아래 info 값을 노출합니다
+
+info:
+  app:
+    name: stability-lab
+    version: 0.0.1
+    owner: backend-team
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+# 기존 local 설정이 여기 그대로 있습니다
