@@ -22,6 +22,8 @@ public enum ErrorCode {
 
     // 공통
     INVALID_INPUT("CMN_001", "입력값이 올바르지 않습니다", HttpStatus.BAD_REQUEST),
+    BAD_REQUEST("CMN_002", "요청 형식이 올바르지 않습니다", HttpStatus.BAD_REQUEST),
+    ENDPOINT_NOT_FOUND("CMN_003", "요청한 주소를 찾을 수 없습니다", HttpStatus.NOT_FOUND),
     INTERNAL_ERROR("CMN_999", "서버에 문제가 발생했습니다", HttpStatus.INTERNAL_SERVER_ERROR);
     // 어떤 코드인지?
     //

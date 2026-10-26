@@ -1,12 +1,17 @@
 package com.example.demo.exception;
 
 import com.example.demo.dto.ErrorResponse;
+import jakarta.servlet.ServletException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
 import java.util.Map;
@@ -42,6 +47,38 @@ public class ApiExceptionHandler {
 
         return ResponseEntity.status(ErrorCode.INVALID_INPUT.getStatus())
                 .body(ErrorResponse.of(ErrorCode.INVALID_INPUT, errors));
+    }
+
+    // 없는 주소로 요청이 들어온 경우 — 주소 오타
+    // 이 예외를 따로 잡지 않으면 맨 아래 handleUnexpected 가 삼켜서 500 이 나갑니다.
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResource(NoResourceFoundException e) {
+
+        log.warn("없는 주소로 요청이 왔습니다. {}", e.getMessage());
+
+        return ResponseEntity.status(ErrorCode.ENDPOINT_NOT_FOUND.getStatus())
+                .body(ErrorResponse.of(ErrorCode.ENDPOINT_NOT_FOUND));
+    }
+
+    // 스프링이 요청을 읽지 못한 경우
+    // Content-Type 누락(415), 지원하지 않는 메서드(405),
+    // 깨진 JSON 본문(400), 숫자 자리에 문자가 온 경우(400)
+    @ExceptionHandler({
+            ServletException.class,
+            HttpMessageNotReadableException.class,
+            TypeMismatchException.class
+    })
+    public ResponseEntity<ErrorResponse> handleBadRequest(Exception e) {
+
+        // 스프링이 정해 둔 상태 코드를 그대로 살려 줍니다. 없으면 400 으로 봅니다.
+        HttpStatusCode status = (e instanceof org.springframework.web.ErrorResponse errorResponse)
+                ? errorResponse.getStatusCode()
+                : ErrorCode.BAD_REQUEST.getStatus();
+
+        log.warn("요청을 처리할 수 없습니다. status={}, type={}", status.value(), e.getClass().getSimpleName());
+
+        return ResponseEntity.status(status)
+                .body(ErrorResponse.of(ErrorCode.BAD_REQUEST));
     }
 
     @ExceptionHandler(Exception.class)
