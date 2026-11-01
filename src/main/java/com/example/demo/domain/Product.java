@@ -23,4 +23,17 @@ public class Product {
         }
         this.stock -= quantity;
     }
+
+    public void addStock(int quantity) {
+
+        if(0 >= quantity) {
+            throw new IllegalArgumentException("추가할 재고는 양수여야 함");
+        }
+        this.stock += quantity;
+    }
+
+
+
+
+
 }
